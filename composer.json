@@ -1,0 +1,10 @@
+{
+  "name":"yourcompany/laravel-license",
+  "description":"Private Laravel 12 client for signed, installation-bound license verification.",
+  "type":"library","license":"proprietary",
+  "require":{"php":"^8.2","illuminate/console":"^12.0","illuminate/contracts":"^12.0","illuminate/http":"^12.0","illuminate/routing":"^12.0","illuminate/support":"^12.0"},
+  "autoload":{"psr-4":{"YourCompany\\LaravelLicense\\":"src/"}},
+  "extra":{"laravel":{"providers":["YourCompany\\LaravelLicense\\LicenseServiceProvider"]}},
+  "minimum-stability":"stable","prefer-stable":true,
+  "version": "1.0.0"
+}
