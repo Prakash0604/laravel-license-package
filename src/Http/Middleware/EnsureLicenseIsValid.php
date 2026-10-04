@@ -13,14 +13,8 @@ class EnsureLicenseIsValid
         private readonly LicenseManager $license
     ) {}
 
-    public function handle(
-        Request $request,
-        Closure $next
-    ): Response {
-        if (
-            !config('license.middleware.enabled', true) ||
-            $this->excluded($request)
-        ) {
+    public function handle(Request $request, Closure $next): Response {
+        if (!config('license.middleware.enabled', true) || $this->excluded($request)) {
             return $next($request);
         }
 
