@@ -42,29 +42,19 @@ class LicenseServiceProvider extends ServiceProvider
             __DIR__ . '/../config/license.php' => config_path('license.php'),
         ], 'license-config');
 
-        /*
-         * Keep the middleware alias available for applications that
-         * explicitly want to use it.
-         */
         $this->app['router']->aliasMiddleware(
             'license',
             EnsureLicenseIsValid::class
         );
 
-        if (config('license.middleware.enabled', true) && config('license.middleware.auto_register', true))
-        {
-            $this->app->afterResolving(Router::class,function (Router $router): void {
-                    $this->registerMiddlewareGroup(
-                        $router,
-                        'web'
-                    );
+        if (
+            config('license.middleware.enabled', true) &&
+            config('license.middleware.auto_register', true)
+        ) {
+            $router = $this->app->make(Router::class);
 
-                    $this->registerMiddlewareGroup(
-                        $router,
-                        'api'
-                    );
-                }
-            );
+            $this->registerMiddlewareGroup($router, 'web');
+            $this->registerMiddlewareGroup($router, 'api');
         }
 
         if ($this->app->runningInConsole()) {
@@ -78,10 +68,14 @@ class LicenseServiceProvider extends ServiceProvider
 
     private function registerMiddlewareGroup(Router $router, string $group): void {
         $middleware = $router->getMiddlewareGroups()[$group] ?? [];
+
         if (in_array(EnsureLicenseIsValid::class, $middleware, true)) {
             return;
         }
 
-        $router->pushMiddlewareToGroup($group, EnsureLicenseIsValid::class);
+        $router->pushMiddlewareToGroup(
+            $group,
+            EnsureLicenseIsValid::class
+        );
     }
 }
